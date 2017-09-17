@@ -14,7 +14,7 @@ def it(text=None):  # Упрощённый input() для реплик Тута
     return input("    Тут:  ")
 
 
-def ChooseFrom(num, proposition):
+def choose_from(num, proposition):
     pp(proposition)
     try:
         choice = int(it())
@@ -24,33 +24,33 @@ def ChooseFrom(num, proposition):
             return choice
         else:
             pp("Просто введи цифру от 1 до "+ str(num))
-            return ChooseFrom(num, proposition)
+            return choose_from(num, proposition)
     except:
         pp("Просто введи цифру от 1 до "+ str(num))
-        return ChooseFrom(num, proposition)
+        return choose_from(num, proposition)
 
 
 class Endeavor:
-    def __init__(self, fName, sName, details, Etype, createDate):
-        self.fName = fName
-        self.sName = sName
+    def __init__(self, full_name, short_name, details, endeavor_type, create_date):
+        self.full_name = full_name
+        self.short_name = short_name
         self.details = details
-        self.Etype = Etype
-        self.createDate = createDate
+        self.endeavor_type = endeavor_type
+        self.create_date = create_date
 
 
-def newEndeavor():
+def new_endeavor():
     while True:
         pp('Сформулируй своё Стремление в форме ответа на вопрос "Что сделать?" (в одну строчку). Это будет полным названием.')
-        fName=it()
-        if fName != '':
+        full_name=it()
+        if full_name != '':
             break
         else:
             pp("Это обязательный пункт!")
     while True:
         pp('Теперь определимся с кратким названием (можно то же, но без пробелов и с понятными сокращениями в словах).')
-        sName=it()
-        if sName != '':
+        short_name=it()
+        if short_name != '':
             break
         else:
             pp("Это обязательный пункт!")
@@ -58,27 +58,47 @@ def newEndeavor():
     details=it()
     if details=='':
         pp("Ладно, детальное описание можно и потом добавить...")
-    Etype=["мечта", "цель", "желание", "задача", "навык", "+привычка", "-привычка", "проблема", "гирька"][ChooseFrom(9, 'Наконец выбери тип данного Стремления: мечта (1), цель (2), желание (3),\nзадача (4), навык (5), нужная привычка (6), вредная привычка (7), проблема (8), "гирька" (9)')-1]
-    createDate=today()
-    pp("Я готов записать такое Стремление:\nНазвание:    "+fName+"\nКраткое название:    "+sName+"\nДетали:    "+details+"\nТип:    "+Etype+"       Дата добавления:    "+str(createDate))
-    choice = ChooseFrom(2, "Подтвердить и сохранить (1) или Сбросить и забыть (2)?")
+    endeavor_type=["мечта", "цель", "желание", "задача", "навык", "+привычка", "-привычка", "проблема", "гирька"][choose_from(9, 'Наконец выбери тип данного Стремления: мечта (1), цель (2), желание (3),\nзадача (4), навык (5), нужная привычка (6), вредная привычка (7), проблема (8), "гирька" (9)')-1]
+    create_date=today()
+    pp("Я готов записать такое Стремление:\n        Название:    "+full_name+"\nКраткое название:    "+short_name+"\n          Детали:    "+details+"\nТип:    "+endeavor_type+"       Дата добавления:    "+str(create_date))
+    choice = choose_from(2, "Подтвердить и сохранить (1) или Сбросить и забыть (2)?")
     if choice == 1:
-        Endeavors.append(Endeavor(fName, sName, details, Etype, createDate))
+        Endeavors.append(Endeavor(full_name, short_name, details, endeavor_type, create_date))
     else:
-        pp("Проеали...")
+        pp("Проехали...")
+
+
+def read_stored_data(record_type):
+    with open('PacerData.txt', 'r', encoding='utf-8') as file:
+        pacerData = file.readlines()
+        record_type_dict = {"Endeavors" : "/  Cтремления  \\(())", "Activities" : "/  Действия  \\[[]]", "ActiveQuests" : "/  Квесты  \\{{}}"}
+        for i in range(len(pacerData)):
+            if pacerData[i].find(record_type_dict[record_type][:-4]) != -1:
+                break
+        i+=1
+        for i in range(i, len(pacerData)):
+            if pacerData[i].find("*") == -1 and pacerData[i].find(record_type_dict[record_type][-4:-2]) != -1:
+                full_name=pacerData[i][:pacerData[i].find(record_type_dict[record_type][-4:-2])-3]
+                short_name=pacerData[i][pacerData[i].find(record_type_dict[record_type][-4:-2])+2:pacerData[i].find(record_type_dict[record_type][-2:])]
+                details=pacerData[i+1].strip()
+                endeavor_type=pacerData[i][pacerData[i].find(record_type_dict[record_type][-2:])+5:pacerData[i].find("   от")]
+                create_date=date(int(pacerData[i][pacerData[i].find("   от")+6:pacerData[i].find("   от")+10]), int(pacerData[i][pacerData[i].find("   от")+11:pacerData[i].find("   от")+13]), int(pacerData[i][pacerData[i].find("   от")+14:pacerData[i].find("   от")+16]))
+                Endeavors.append(Endeavor(full_name, short_name, details, endeavor_type, create_date))
+            elif pacerData[i][0] == "_":
+                break
 
 
 class Activity:
-    def __init__(self, fName, sName, amount, diff, usef):
-        self.fName=fName
-        self.sName=sName
+    def __init__(self, full_name, short_name, amount, diff, usef):
+        self.full_name=full_name
+        self.short_name=short_name
         self.amount=amount
         self.diff=diff
         self.usef=usef
 
 
 class ActiveQuest:
-    def __init__(self, fName, sName, amount, actualDiff, usef, startDate):
+    def __init__(self, full_name, short_name, amount, actual_diff, usef, start_date):
         pass
 
 
@@ -95,12 +115,12 @@ if user == "Тут":
         Endeavors=[]
         while True:
             print()
-            choice = ChooseFrom(7, "Мы с тобой можем заняться твоими Стремлениями (1), Действиями (2) или Квестами (3).\nМожем поговорить о твоей Вере_В_Себя (4). Можем посмотреть Статистику (5).\nИли можешь просто Отчитаться по текущим заданиям (6). Или выйти (7).")
+            choice = choose_from(7, "Мы с тобой можем заняться твоими Стремлениями (1), Действиями (2) или Квестами (3).\nМожем поговорить о твоей Вере_В_Себя (4). Можем посмотреть Статистику (5).\nИли можешь просто Отчитаться по текущим заданиям (6). Или выйти (7).")
             if choice == 1:
                 while True:
-                    choice = ChooseFrom(2, "Мне пока ничего не известно о твоих Стремлениях.\nРасскажешь мне про Стремление, которое ты хочешь Добавить (1)?\nИли пока Отложим (2) и займёмся чем-то другим?")
+                    choice = choose_from(2, "Мне пока ничего не известно о твоих Стремлениях.\nРасскажешь мне про Стремление, которое ты хочешь Добавить (1)?\nИли пока Отложим (2) и займёмся чем-то другим?")
                     if choice == 1:
-                        newEndeavor()
+                        new_endeavor()
                     elif choice == -1:
                         break
             elif choice == 2:
@@ -110,16 +130,16 @@ if user == "Тут":
             elif choice == 4:
                 try:
                     with open('PacerData.txt', 'r+', encoding='utf-8') as file:
-                        PacerData = file.readlines()
-                        BBCprev = int(PacerData[0][PacerData[0].find(" ВВС = ") + len(" ВВС = "):])
+                        pacerData = file.readlines()
+                        BBCprev = int(pacerData[0][pacerData[0].find(" ВВС = ") + len(" ВВС = "):])
                         pp("Насколько мне известно, твоя нынешняя Вера_В_Себя равняется " + str(BBCprev))
                         pp("Как она изменилась с прошлого раза?")
                         BBC = BBCprev + int(it())
                         pp("Тогда теперь твоя Вера_В_Себя составляет " + str(BBC))
                         file.seek(0)
                         file.truncate()
-                        PacerData[0]=PacerData[0].replace(str(BBCprev), str(BBC))
-                        file.writelines(PacerData)
+                        pacerData[0]=pacerData[0].replace(str(BBCprev), str(BBC))
+                        file.writelines(pacerData)
                 except:
                     pp("Похоже что-то не так с файлом с данными...")
             elif choice == 5:
