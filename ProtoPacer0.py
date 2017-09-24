@@ -10,12 +10,7 @@ today=date.today
 
 # Позволит обрабатывать текстовый файл, находя и изменяя в нём нужные данные.
 from dataparser import *
-# Определяет, есть ли файл рядом с обрабатываемым файлом, или блок, линия или строка в обрабатываемом файле.
-is_it_there = DataParser.is_it_there
-# Находит все вхождения строки в обрабатываемом файле и возвращает номера строк и позиции "от" и "до".
-where_is_it = DataParser.where_is_it
-# Возвращает текст, взятый в обрабатываемом файле по указанным координатам.
-grab_it_there = DataParser.grab_it_there
+
 
 
 PATH = (abspath(__file__))
@@ -152,80 +147,170 @@ class Quest:
 
 ###############################################################################################################
 
-INI = 'ProtoPacer0.ini'
-if file_to_parse.is_it_there('f', INI):
+# INI = 'ProtoPacer0.ini'
+# if not file_to_parse.is_it_there('f', INI):
+#     with open(INI, 'w', encoding="utf-8") as file:
+#         file.writelines(['[известные пользователи]\n','\n','[конец]'])
+#
+# file_to_parse.name = abspath(INI)
+# users_y1 = file_to_parse.where_is_it("[известные пользователи]")[0][0]+1
+# users_y2 = file_to_parse.where_is_it("[", start_line=users_y1)[0][0]
+# users_in_INI = file_to_parse.where_is_it(': ', start_line=users_y1, fin_line=users_y2)
+# num_of_users = len(users_in_INI)
+# user_dic = {}
+# for u in range(num_of_users):
+#     user_dic[file_to_parse.grab_it_there(SOL_to_coords(users_in_INI[u]))] = file_to_parse.grab_it_there(coords_to_EOL(users_in_INI[u]))
+#
+# def main():
+#     pass
+#
+#
+#
+# print("\n   Вас приветствует PACER - игровой органайзер, задающий темп!\n")
+# pp("Представьтесь пожалуйста")
+# user = "Тут" # Заглушка: пропускаем ввод имени пользователя, по умолчанию считаем, что введено "Тут"
+# # user = ig()
+# pg("Тут")
+# if user == "Тут":
+#     pp(user+", если это правда ты, докажи, введя пароль.")
+#     password = "*********" # Заглушка: пропускаем ввод и проверку пароля.
+#     # password = ig()
+#     pg("*********")
+#     if password == "*********":
+#         pp("Ладно, прости. Заходи, "+user+". Рад тебя видеть!")
+#         file_to_parse = DataParser(user_dic[user])
+#         while True:
+#             print("\n            1. Стремления\n            2. Действия\n            3. Квесты\n            4. Вера В Себя  ( 115 )\n            5. Статистика\n            6. Отчитаться  ( 2 / 5 )\n            7. Выйти\n")
+#             choice = choose_from(7, "Мы с тобой можем заняться твоими Стремлениями (1), Действиями (2) или Квестами (3).\nМожем поговорить о твоей Вере_В_Себя (4). Можем посмотреть Статистику (5).\nИли ты можешь просто Отчитаться по текущим заданиям (6). Или выйти (7).")
+#             if choice == 1:
+#                 num_of_Endeavors = read_stored_data("Endeavors")
+#                 if  num_of_Endeavors > 0:
+#                     pp("Знаешь, сколько твоих Стремлений у меня уже записано? "+str(num_of_Endeavors)+".")
+#                     print(Endeavors[7].endeavor_type)
+#                 else:
+#                     while True:
+#                         choice = choose_from(2, "Мне пока ничего не известно о твоих Стремлениях.\nРасскажешь мне про Стремление, которое ты хочешь Добавить (1)?\nИли пока Отложим (2) и займёмся чем-то другим?")
+#                         if choice == 1:
+#                             new_endeavor()
+#                         elif choice == -1:
+#                             break
+#             elif choice == 2:
+#                 pass
+#             elif choice == 3:
+#                 pass
+#             elif choice == 4:
+#                 try:
+#                     with open('PacerData.txt', 'r+', encoding='utf-8') as file:
+#                         pacerData = file.readlines()
+#                         BBCprev = int(pacerData[0][pacerData[0].find(" ВВС = ") + len(" ВВС = "):])
+#                         pp("Насколько мне известно, твоя нынешняя Вера_В_Себя равняется " + str(BBCprev))
+#                         pp("Как она изменилась с прошлого раза?")
+#                         BBC = BBCprev + int(it())
+#                         pp("Тогда теперь твоя Вера_В_Себя составляет " + str(BBC))
+#                         file.seek(0)
+#                         file.truncate()
+#                         pacerData[0]=pacerData[0].replace(str(BBCprev), str(BBC))
+#                         file.writelines(pacerData)
+#                 except:
+#                     pp("Похоже что-то не так с файлом с данными...")
+#             elif choice == 5:
+#                 pass
+#             elif choice == 6:
+#                 pass
+#             elif choice == -1:
+#                 pp("Всего хорошего!")
+#                 exit()
+#     else:
+#         pp("Вон отсюда, самозванец!")
+# else:
+#     pp("Понятия не имею, кто вы. Всего хорошего.")
+
+
+def LOGGING_IN():
+    global file_to_parse
+    INI = __file__[:-2]+'ini'
+    if not file_to_parse.is_it_there('f', INI):
+        with open(INI, 'w', encoding="utf-8") as file:
+            file.writelines(['[известные пользователи]\n', '\n', '[конец]'])
+
     file_to_parse.name = abspath(INI)
-    users_y1 = file_to_parse.where_is_it("[известные пользователи]")[0][0]+1
+    users_y1 = file_to_parse.where_is_it("[известные пользователи]")[0][0] + 1
     users_y2 = file_to_parse.where_is_it("[", start_line=users_y1)[0][0]
     users_in_INI = file_to_parse.where_is_it(': ', start_line=users_y1, fin_line=users_y2)
     num_of_users = len(users_in_INI)
     user_dic = {}
     for u in range(num_of_users):
-        user_dic[file_to_parse.grab_it_there(SOL_to_coords(users_in_INI[u]))] = file_to_parse.grab_it_there(coords_to_EOL(users_in_INI[u]))
-else:
-    # создать INI
-    pass
+        user_dic[file_to_parse.grab_it_there(SOL_to_coords(users_in_INI[u]))] = file_to_parse.grab_it_there(
+            coords_to_EOL(users_in_INI[u]))
 
-def main():
-    pass
-
-
-
-print("\n   Вас приветствует PACER - игровой органайзер, задающий темп!\n")
-pp("Представьтесь пожалуйста")
-user = "Тут" # Заглушка: пропускаем ввод имени пользователя, по умолчанию считаем, что введено "Тут"
-# user = ig()
-pg("Тут")
-if user == "Тут":
-    pp(user+", если это правда ты, докажи, введя пароль.")
-    password = "*********" # Заглушка: пропускаем ввод и проверку пароля.
-    # password = ig()
-    pg("*********")
-    if password == "*********":
-        pp("Ладно, прости. Заходи, "+user+". Рад тебя видеть!")
-        file_to_parse = DataParser(user_dic[user])
-        while True:
-            print("\n            1. Стремления\n            2. Действия\n            3. Квесты\n            4. Вера В Себя  ( 115 )\n            5. Статистика\n            6. Отчитаться  ( 2 / 5 )\n            7. Выйти\n")
-            choice = choose_from(7, "Мы с тобой можем заняться твоими Стремлениями (1), Действиями (2) или Квестами (3).\nМожем поговорить о твоей Вере_В_Себя (4). Можем посмотреть Статистику (5).\nИли ты можешь просто Отчитаться по текущим заданиям (6). Или выйти (7).")
-            if choice == 1:
-                num_of_Endeavors = read_stored_data("Endeavors")
-                if  num_of_Endeavors > 0:
-                    pp("Знаешь, сколько твоих Стремлений у меня уже записано? "+str(num_of_Endeavors)+".")
-                    print(Endeavors[7].endeavor_type)
-                else:
-                    while True:
-                        choice = choose_from(2, "Мне пока ничего не известно о твоих Стремлениях.\nРасскажешь мне про Стремление, которое ты хочешь Добавить (1)?\nИли пока Отложим (2) и займёмся чем-то другим?")
-                        if choice == 1:
-                            new_endeavor()
-                        elif choice == -1:
-                            break
-            elif choice == 2:
-                pass
-            elif choice == 3:
-                pass
-            elif choice == 4:
-                try:
-                    with open('PacerData.txt', 'r+', encoding='utf-8') as file:
-                        pacerData = file.readlines()
-                        BBCprev = int(pacerData[0][pacerData[0].find(" ВВС = ") + len(" ВВС = "):])
-                        pp("Насколько мне известно, твоя нынешняя Вера_В_Себя равняется " + str(BBCprev))
-                        pp("Как она изменилась с прошлого раза?")
-                        BBC = BBCprev + int(it())
-                        pp("Тогда теперь твоя Вера_В_Себя составляет " + str(BBC))
-                        file.seek(0)
-                        file.truncate()
-                        pacerData[0]=pacerData[0].replace(str(BBCprev), str(BBC))
-                        file.writelines(pacerData)
-                except:
-                    pp("Похоже что-то не так с файлом с данными...")
-            elif choice == 5:
-                pass
-            elif choice == 6:
-                pass
-            elif choice == -1:
-                pp("Всего хорошего!")
-                exit()
+    print("\n   Вас приветствует PACER - игровой органайзер, задающий темп!\n")
+    pp("Представьтесь пожалуйста")
+    user = "Тут"  # Заглушка: пропускаем ввод имени пользователя, по умолчанию считаем, что введено "Тут"
+    # user = ig()
+    pg("Тут")
+    if user == "Тут":
+        pp(user + ", если это правда ты, докажи, введя пароль.")
+        password = "*********"  # Заглушка: пропускаем ввод и проверку пароля.
+        # password = ig()
+        pg("*********")
+        if password == "*********":
+            pp("Ладно, прости. Заходи, " + user + ". Рад тебя видеть!")
+            file_to_parse = DataParser(user_dic[user])
+        else:
+            pp("Вон отсюда, самозванец!")
     else:
-        pp("Вон отсюда, самозванец!")
-else:
-    pp("Понятия не имею, кто вы. Всего хорошего.")
+        pp("Понятия не имею, кто вы. Всего хорошего.")
+
+
+def MAIN():
+    while True:
+        print(
+            "\n            1. Стремления\n            2. Действия\n            3. Квесты\n            4. Вера В Себя  ( 115 )\n            5. Статистика\n            6. Отчитаться  ( 2 / 5 )\n            7. Выйти\n")
+        choice = choose_from(7,
+                             "Мы с тобой можем заняться твоими Стремлениями (1), Действиями (2) или Квестами (3).\nМожем поговорить о твоей Вере_В_Себя (4). Можем посмотреть Статистику (5).\nИли ты можешь просто Отчитаться по текущим заданиям (6). Или выйти (7).")
+        if choice == 1:
+            num_of_Endeavors = read_stored_data("Endeavors")
+            if num_of_Endeavors > 0:
+                pp("Знаешь, сколько твоих Стремлений у меня уже записано? " + str(num_of_Endeavors) + ".")
+                print(Endeavors[7].endeavor_type)
+            else:
+                while True:
+                    choice = choose_from(2,
+                                         "Мне пока ничего не известно о твоих Стремлениях.\nРасскажешь мне про Стремление, которое ты хочешь Добавить (1)?\nИли пока Отложим (2) и займёмся чем-то другим?")
+                    if choice == 1:
+                        new_endeavor()
+                    elif choice == -1:
+                        break
+        elif choice == 2:
+            pass
+        elif choice == 3:
+            pass
+        elif choice == 4:
+            try:
+                with open('PacerData.txt', 'r+', encoding='utf-8') as file:
+                    pacerData = file.readlines()
+                    BBCprev = int(pacerData[0][pacerData[0].find(" ВВС = ") + len(" ВВС = "):])
+                    pp("Насколько мне известно, твоя нынешняя Вера_В_Себя равняется " + str(BBCprev))
+                    pp("Как она изменилась с прошлого раза?")
+                    BBC = BBCprev + int(it())
+                    pp("Тогда теперь твоя Вера_В_Себя составляет " + str(BBC))
+                    file.seek(0)
+                    file.truncate()
+                    pacerData[0] = pacerData[0].replace(str(BBCprev), str(BBC))
+                    file.writelines(pacerData)
+            except:
+                pp("Похоже что-то не так с файлом с данными...")
+        elif choice == 5:
+            pass
+        elif choice == 6:
+            pass
+        elif choice == -1:
+            pp("Всего хорошего!")
+            exit()
+
+
+while True:
+    LOGGING_IN()
+
+    MAIN()
+
