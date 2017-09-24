@@ -234,14 +234,8 @@ def LOGGING_IN():
             file.writelines(['[известные пользователи]\n', '\n', '[конец]'])
 
     file_to_parse.name = abspath(INI)
-    users_y1 = file_to_parse.where_is_it("[известные пользователи]")[0][0] + 1
-    users_y2 = file_to_parse.where_is_it("[", start_line=users_y1)[0][0]
-    users_in_INI = file_to_parse.where_is_it(': ', start_line=users_y1, fin_line=users_y2)
-    num_of_users = len(users_in_INI)
-    user_dic = {}
-    for u in range(num_of_users):
-        user_dic[file_to_parse.grab_it_there(SOL_to_coords(users_in_INI[u]))] = file_to_parse.grab_it_there(
-            coords_to_EOL(users_in_INI[u]))
+    user_dic = file_to_parse.section_to_dic("[известные пользователи]","[конец]",": ")
+    print(user_dic)
 
     print("\n   Вас приветствует PACER - игровой органайзер, задающий темп!\n")
     pp("Представьтесь пожалуйста")

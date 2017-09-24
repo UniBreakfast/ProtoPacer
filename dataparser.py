@@ -196,7 +196,10 @@ class DataParser:
 
         elif len(coords) == 2:
             y1, y2 = coords
-            if y2-y1 == 1:
+            if y1 >= y2:
+                raise ValueError ("incorrect range")
+
+            if y2 - y1 == 1:
                 return self.data[y1][0]
             else:
                 return self.data[y1:y2]
@@ -229,8 +232,8 @@ class DataParser:
 
         entries = self.where_is_it(delimiter, start_line=start_line, fin_line=fin_line)
         dic = {}
-        for j in range(fin_line - start_line):
-            dic[self.grab_it_there(SOL_to_coords(entries[j]))] = self.grab_it_there(coords_to_EOL(entries[j]))
+        for j in range(len(entries)):
+            dic[self.grab_it_there(SOL_to_coords(entries[j]))] = self.grab_it_there(coords_to_EOL(entries[j]))[:-1]
         return dic
 
 

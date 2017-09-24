@@ -6,5 +6,5 @@ from dataparser import *
 
 SOURCE = DataParser("ProtoPacer0.ini")
 
-help(dataparser)
-print(SOURCE.is_unique(''))
+help(DataParser.section_to_dic)
+print(SOURCE.section_to_dic("[известные пользователи]","[конец]",": "))
