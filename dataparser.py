@@ -233,7 +233,15 @@ class DataParser:
         entries = self.where_is_it(delimiter, start_line=start_line, fin_line=fin_line)
         dic = {}
         for j in range(len(entries)):
-            dic[self.grab_it_there(SOL_to_coords(entries[j]))] = self.grab_it_there(coords_to_EOL(entries[j]))[:-1]
+            key_name = self.grab_it_there(SOL_to_coords(entries[j]))
+            if not self.is_unique(key_name+delimiter, start_line=start_line, fin_line=fin_line):
+                try_places = self.where_is_it(key_name + delimiter, start_line=start_line, fin_line=fin_line)
+                if len(try_places)>1 and try_places[0][1]==try_places[1][1]:
+                    raise NameError ("non unique key values in section between lines "+str(start_line)+" and "+
+                                 str(fin_line)+" of "+str(self.name))
+            key_value = self.grab_it_there(coords_to_EOL(entries[j]))[:-1]
+            if len(key_value) > 0:
+                dic[key_name] = key_value
         return dic
 
 
